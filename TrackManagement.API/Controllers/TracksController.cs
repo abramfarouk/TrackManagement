@@ -7,6 +7,7 @@ using TrackManagement.Application.Interfaces.Services;
 namespace TrackManagement.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/tracks")]
     public class TracksController : ControllerBase
     {
@@ -36,7 +37,6 @@ namespace TrackManagement.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [ProducesResponseType(typeof(TrackDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -52,7 +52,6 @@ namespace TrackManagement.API.Controllers
         }
 
         [HttpPost("{id:int}/distribute")]
-        [Authorize]
         [ProducesResponseType(typeof(TrackDetailDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -68,7 +67,6 @@ namespace TrackManagement.API.Controllers
         }
 
         [HttpPatch("{id:int}/status")]
-        [Authorize]
         [ProducesResponseType(typeof(TrackDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

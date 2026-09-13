@@ -26,7 +26,7 @@ var signingKey = jwtSection["SigningKey"]
     ?? throw new InvalidOperationException("Jwt:SigningKey is not configured.");
 
 var jwtSettings2 = new JwtSettings();
-builder.Configuration.GetSection("JwtSettings").Bind(jwtSettings2);
+jwtSection.Bind(jwtSettings2);
 builder.Services.AddSingleton(jwtSettings2);
 
 

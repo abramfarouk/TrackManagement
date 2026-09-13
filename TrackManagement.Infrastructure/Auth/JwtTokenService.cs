@@ -12,9 +12,9 @@ namespace TrackManagement.Infrastructure.Auth
     {
         private readonly JwtSettings _settings;
 
-        public JwtTokenService(IOptions<JwtSettings> settings)
+        public JwtTokenService(JwtSettings settings)
         {
-            _settings = settings.Value;
+            _settings = settings;
         }
 
         public (string Token, DateTime ExpiresAtUtc) GenerateToken(string username)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrackManagement.Application.DTOs;
 using TrackManagement.Application.Interfaces.Services;
@@ -6,6 +7,7 @@ using TrackManagement.Application.Interfaces.Services;
 namespace TrackManagement.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/dsps")]
     public class DspsController : ControllerBase
     {

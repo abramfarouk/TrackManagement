@@ -7,6 +7,7 @@ using TrackManagement.Application.Interfaces.Services;
 namespace TrackManagement.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/artists")]
     public class ArtistsController : ControllerBase
     {
