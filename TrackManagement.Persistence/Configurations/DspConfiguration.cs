@@ -1,0 +1,28 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TrackManagement.Domain.Entities;
+
+namespace TrackManagement.Persistence.Configurations
+{
+    public class DspConfiguration : IEntityTypeConfiguration<Dsp>
+    {
+        public void Configure(EntityTypeBuilder<Dsp> builder)
+        {
+            builder.ToTable("Dsps");
+
+            builder.HasKey(d => d.Id);
+
+            builder.Property(d => d.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.HasIndex(d => d.Name).IsUnique();
+        }
+    }
+
+}
