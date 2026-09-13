@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
 using TrackManagement.Api.Middleware;
+using TrackManagement.API.Filters;
 using TrackManagement.Infrastructure;
 using TrackManagement.Infrastructure.Auth;
 using TrackManagement.Persistence;
@@ -17,7 +18,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddInfrastructure()
     .AddPersistence(builder.Configuration); 
