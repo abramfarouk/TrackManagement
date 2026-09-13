@@ -1,4 +1,5 @@
 ﻿using TrackManagement.Domain.Common;
+using TrackManagement.Domain.Enums;
 
 namespace TrackManagement.Domain.Entities
 {
