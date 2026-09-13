@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -21,10 +21,6 @@
     <ProjectReference Include="..\TrackManagement.Application\TrackManagement.Application.csproj" />
     <ProjectReference Include="..\TrackManagement.Infrastructure\TrackManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\TrackManagement.Persistence\TrackManagement.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
