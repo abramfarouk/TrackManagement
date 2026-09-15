@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, finalize, firstValueFrom, shareReplay, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 interface LoginResponse {
@@ -16,6 +16,7 @@ interface RegisteredUser {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly tokenSubject = new BehaviorSubject<string | null>(null);
+  private refreshRequest$: Observable<LoginResponse> | null = null;
   readonly isLoggedIn$ = this.tokenSubject.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -34,10 +35,14 @@ export class AuthService {
   }
 
   logout(): void {
+    this.clearSession();
     this.http.post(`${environment.apiBaseUrl}/auth/logout`, {}, { withCredentials: true }).subscribe({
-      complete: () => this.tokenSubject.next(null),
-      error: () => this.tokenSubject.next(null)
+      error: () => undefined
     });
+  }
+
+  clearSession(): void {
+    this.tokenSubject.next(null);
   }
 
   getToken(): string | null {
@@ -85,8 +90,28 @@ export class AuthService {
   }
 
   refresh(): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/refresh`, {}, { withCredentials: true })
-      .pipe(tap((res) => this.tokenSubject.next(res.token)));
+    if (!this.refreshRequest$) {
+      this.refreshRequest$ = this.http
+        .post<LoginResponse>(`${environment.apiBaseUrl}/auth/refresh`, {}, { withCredentials: true })
+        .pipe(
+          tap((res) => this.tokenSubject.next(res.token)),
+          finalize(() => this.refreshRequest$ = null),
+          shareReplay(1)
+        );
+    }
+
+    return this.refreshRequest$;
+  }
+
+  async restoreSession(): Promise<void> {
+    if (this.tokenSubject.value) {
+      return;
+    }
+
+    try {
+      await firstValueFrom(this.refresh());
+    } catch {
+      this.clearSession();
+    }
   }
 }

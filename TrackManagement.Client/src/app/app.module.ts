@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,12 @@ import { TrackFormComponent } from './track-form/track-form.component';
 import { LoginComponent } from './login/login.component';
 import { ArtistListComponent } from './artist-list/artist-list.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AuthService } from './services/auth.service';
 import { RegisterComponent } from './register/register.component';
+
+export function restoreAuthSession(authService: AuthService): () => Promise<void> {
+  return () => authService.restoreSession();
+}
 
 @NgModule({
   declarations: [
@@ -34,7 +39,13 @@ import { RegisterComponent } from './register/register.component';
     AppRoutingModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: restoreAuthSession,
+      deps: [AuthService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

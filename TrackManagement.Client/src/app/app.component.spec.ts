@@ -30,19 +30,14 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.brand')?.textContent).toContain('Track Management');
   });
 
-  it('should clear stored auth session when logging out', () => {
+  it('should request logout from the auth service', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     const authService = TestBed.inject(AuthService);
 
-    localStorage.setItem('trackmanagement.jwt', 'token');
-    localStorage.setItem('trackmanagement.user', 'admin');
-
-    spyOn(authService, 'logout').and.callThrough();
+    spyOn(authService, 'logout');
     app.logout();
 
     expect(authService.logout).toHaveBeenCalled();
-    expect(localStorage.getItem('trackmanagement.jwt')).toBeNull();
-    expect(localStorage.getItem('trackmanagement.user')).toBeNull();
   });
 });

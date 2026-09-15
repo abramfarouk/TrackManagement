@@ -84,7 +84,7 @@ namespace TrackManagement.API.Controllers
             var rotated = await _refreshTokenService.RotateAsync(refreshToken, cancellationToken);
             if (rotated is null)
             {
-                Response.Cookies.Delete("trackmanagement.refresh");
+                DeleteRefreshCookie();
                 return Unauthorized();
             }
 
@@ -92,7 +92,7 @@ namespace TrackManagement.API.Controllers
             var user = await _userService.GetByUsernameAsync(username, cancellationToken);
             if (user is null)
             {
-                Response.Cookies.Delete("trackmanagement.refresh");
+                DeleteRefreshCookie();
                 return Unauthorized();
             }
 
@@ -110,7 +110,7 @@ namespace TrackManagement.API.Controllers
                 await _refreshTokenService.RevokeAsync(refreshToken, cancellationToken);
             }
 
-            Response.Cookies.Delete("trackmanagement.refresh");
+            DeleteRefreshCookie();
             return NoContent();
         }
 
@@ -120,8 +120,18 @@ namespace TrackManagement.API.Controllers
             {
                 HttpOnly = true,
                 Secure = Request.IsHttps,
-                SameSite = SameSiteMode.Lax,
+                SameSite = Request.IsHttps ? SameSiteMode.None : SameSiteMode.Lax,
                 Expires = expiresAtUtc,
+                Path = "/api/auth"
+            });
+        }
+
+        private void DeleteRefreshCookie()
+        {
+            Response.Cookies.Delete("trackmanagement.refresh", new CookieOptions
+            {
+                Secure = Request.IsHttps,
+                SameSite = Request.IsHttps ? SameSiteMode.None : SameSiteMode.Lax,
                 Path = "/api/auth"
             });
         }
