@@ -4,9 +4,30 @@
   gap: 5rem;
   align-items: center;
   max-width: 1020px;
-  min-height: calc(100vh - 72px);
+  min-height: calc(100vh - 76px);
   margin: 0 auto;
   padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-shell::after {
+  content: '';
+  position: absolute;
+  right: 5%;
+  bottom: 8%;
+  width: 11rem;
+  height: 11rem;
+  border: 1px solid rgba(88, 212, 208, 0.2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 22px rgba(88, 212, 208, 0.035), 0 0 0 44px rgba(88, 212, 208, 0.025);
+  pointer-events: none;
+}
+
+.login-intro,
+.login-card {
+  position: relative;
+  z-index: 1;
 }
 
 .login-intro {
@@ -21,6 +42,7 @@
 }
 
 .login-intro h1 {
+  max-width: 12ch;
   margin: 1rem 0;
   color: var(--ink);
   font-size: clamp(2.8rem, 6vw, 5rem);
@@ -44,6 +66,7 @@
   border: 1px solid var(--line);
   border-radius: 12px;
   box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
 }
 
 .card-heading {
@@ -51,6 +74,8 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.75rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--line);
 }
 
 .mini-mark {
@@ -66,6 +91,7 @@
 
 .card-heading h2 {
   margin: 0;
+  color: var(--ink);
   font-size: 1.35rem;
 }
 
@@ -75,15 +101,10 @@
   font-size: 0.85rem;
 }
 
-.hint {
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 label {
@@ -103,7 +124,38 @@ input {
   border-radius: 6px;
   background: rgba(15, 23, 42, 0.7);
   color: var(--ink);
+  font: inherit;
   transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+select {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--ink);
+  font: inherit;
+}
+
+select:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(88, 212, 208, 0.12);
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(88, 212, 208, 0.12);
+  outline: none;
+}
+
+.field-hint {
+  margin-top: -0.15rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
 .password-field {
@@ -145,36 +197,50 @@ input {
   stroke-width: 1.7;
 }
 
-input:focus {
-  border-color: var(--teal);
-  box-shadow: 0 0 0 3px rgba(15, 139, 141, 0.12);
-  outline: none;
-}
-
-button {
+form > button {
+  min-height: 3.15rem;
+  margin-top: 0.5rem;
   padding: 0.8rem;
-  background: var(--teal);
-  color: white;
   border: none;
   border-radius: 6px;
+  background: var(--teal);
+  color: white;
   font: inherit;
   font-weight: 700;
+  letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background 160ms ease;
+  transition: background 160ms ease, transform 160ms ease;
 }
 
-button:hover:not(:disabled) {
+form > button:hover:not(:disabled) {
   background: var(--teal-dark);
+  transform: translateY(-1px);
 }
 
-button:disabled {
+form > button:disabled {
   background: rgba(88, 212, 208, 0.28);
   color: rgba(237, 244, 255, 0.55);
   cursor: not-allowed;
 }
 
+.success,
 .error {
+  margin: 0.25rem 0 0;
+  padding: 0.7rem 0.85rem;
+  border-radius: 7px;
   font-size: 0.85rem;
+}
+
+.success {
+  color: #176b45;
+  background: #ecf8f0;
+  border: 1px solid #bfe8cc;
+}
+
+.error {
+  color: var(--danger);
+  background: rgba(255, 122, 122, 0.1);
+  border: 1px solid rgba(255, 122, 122, 0.28);
 }
 
 @media (max-width: 760px) {
@@ -187,5 +253,9 @@ button:disabled {
 
   .login-intro h1 {
     font-size: 3rem;
+  }
+
+  .login-card {
+    padding: 1.5rem;
   }
 }

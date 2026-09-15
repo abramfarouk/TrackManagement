@@ -4,10 +4,22 @@
     <span><strong>Takwene</strong><small>Music operations</small></span>
   </a>
   <div class="nav-actions">
-    <a routerLink="/tracks" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Tracks</a>
-    <a routerLink="/artists" routerLinkActive="active-link">Artists</a>
+    <a *ngIf="authService.isLoggedIn()" routerLink="/tracks" routerLinkActive="active-link">Tracks</a>
+    <a *ngIf="authService.isLoggedIn()" routerLink="/artists" routerLinkActive="active-link">Artists</a>
+    <a *ngIf="authService.isAdmin()" routerLink="/register" routerLinkActive="active-link" class="add-user-link">Add user</a>
+    <span *ngIf="authService.isLoggedIn()" class="user-identity" aria-label="Current user">
+      <span class="user-avatar" aria-hidden="true">{{ authService.getUsername()?.charAt(0)?.toUpperCase() }}</span>
+      <span class="user-copy">
+        <small class="user-caption">Signed in as</small>
+        <strong>{{ authService.getUsername() }}</strong>
+        <small class="user-role"><span class="role-dot" aria-hidden="true"></span>{{ authService.getRole() }}</small>
+      </span>
+    </span>
     <a *ngIf="!authService.isLoggedIn()" routerLink="/login" class="sign-in-link">Sign in</a>
-    <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="btn-link">Sign out</button>
+    <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="btn-link" title="Sign out">
+      <span class="sign-out-icon" aria-hidden="true">&#8594;</span>
+      <span>Sign out</span>
+    </button>
   </div>
 </nav>
 

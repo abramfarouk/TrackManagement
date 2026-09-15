@@ -13,6 +13,7 @@ using TrackManagement.Infrastructure.Auth;
 using TrackManagement.Infrastructure.Repositories;
 using TrackManagement.Persistence.Context;
 using TrackManagement.Persistence.Repositories;
+using TrackManagement.Persistence.Services;
 
 namespace TrackManagement.Persistence
 {
@@ -28,6 +29,8 @@ namespace TrackManagement.Persistence
             });
 
             services.AddSingleton<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IArtistRepository, ArtistRepository>();
             services.AddScoped<ITrackRepository, TrackRepository>();

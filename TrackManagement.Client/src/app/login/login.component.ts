@@ -9,12 +9,21 @@ import { AuthService } from '../services/auth.service';
   standalone: false
 })
 export class LoginComponent {
-  username = 'admin';
-  password = 'Password123@#';
+  username = '';
+  password = '';
+  showPassword = false;
   errorMessage: string | null = null;
   isSubmitting = false;
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  get canSubmit(): boolean {
+    return this.username.trim().length > 0 && this.password.length > 0 && !this.isSubmitting;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   submit(): void {
     this.errorMessage = null;

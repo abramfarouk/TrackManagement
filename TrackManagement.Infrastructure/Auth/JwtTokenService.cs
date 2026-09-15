@@ -17,7 +17,7 @@ namespace TrackManagement.Infrastructure.Auth
             _settings = settings;
         }
 
-        public (string Token, DateTime ExpiresAtUtc) GenerateToken(string username)
+        public (string Token, DateTime ExpiresAtUtc) GenerateToken(string username, string role = "Admin")
         {
             var expires = DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes);
 
@@ -25,7 +25,8 @@ namespace TrackManagement.Infrastructure.Auth
             {
             new Claim(JwtRegisteredClaimNames.Sub, username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Role, role)
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SigningKey));

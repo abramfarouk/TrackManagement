@@ -1,0 +1,54 @@
+<main class="login-shell">
+  <section class="login-intro">
+    <span class="eyebrow">TAKWENE / ADMINISTRATION</span>
+    <h1>Add an<br /><em>admin user.</em></h1>
+    <p>Create a secure administrator account for the music operations workspace.</p>
+  </section>
+
+  <section class="login-card">
+    <div class="card-heading">
+      <span class="mini-mark">T</span>
+      <div><h2>Add user</h2><p>Administrator access only</p></div>
+    </div>
+
+    <form (ngSubmit)="submit()">
+      <label>
+        Username
+        <input type="text" name="username" autocomplete="username" [(ngModel)]="username" minlength="3" maxlength="100" required />
+      </label>
+
+      <label>
+        Password
+        <span class="password-field">
+          <input [type]="showPassword ? 'text' : 'password'" name="password" autocomplete="new-password" [(ngModel)]="password" minlength="8" maxlength="100" required />
+          <button
+            type="button"
+            class="password-toggle"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            [title]="showPassword ? 'Hide password' : 'Show password'"
+            (click)="togglePasswordVisibility()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+              <circle cx="12" cy="12" r="2.5"></circle>
+            </svg>
+          </button>
+        </span>
+        <small class="field-hint">Use at least 8 characters.</small>
+      </label>
+
+      <label>
+        Role
+        <select name="role" [(ngModel)]="role" required>
+          <option *ngFor="let availableRole of roles" [value]="availableRole">{{ availableRole }}</option>
+        </select>
+      </label>
+
+      <button type="submit" [disabled]="!canSubmit">
+        {{ isSubmitting ? 'Adding user...' : 'Add user' }}
+      </button>
+
+      <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </section>
+</main>

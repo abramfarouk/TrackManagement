@@ -87,6 +87,14 @@
   color: #ffffff;
 }
 
+.add-user-link {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(255, 125, 91, 0.45);
+  border-radius: 7px;
+  background: rgba(255, 125, 91, 0.1);
+  color: #ffd5c8 !important;
+}
+
 .btn-link {
   background: none;
   border: none;
@@ -101,5 +109,116 @@
 .btn-link:hover {
   color: #ffffff;
   opacity: 1;
+}
+
+.role-badge {
+  padding: 0.28rem 0.55rem;
+  border: 1px solid rgba(88, 212, 208, 0.38);
+  border-radius: 999px;
+  color: var(--teal);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.user-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 10.5rem;
+  padding: 0.25rem 0 0.25rem 0.9rem;
+  border-left: 1px solid var(--line);
+}
+
+.user-avatar {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), #b7f0df);
+  color: var(--navy);
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.user-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.user-caption {
+  margin-bottom: 0.18rem;
+  color: var(--muted);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.user-identity strong {
+  max-width: 9rem;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 0.84rem;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.22rem;
+  color: var(--teal);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.role-dot {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(125, 228, 166, 0.1);
+}
+
+.user-identity small:not(.user-caption):not(.user-role) {
+  color: var(--ink);
+}
+
+.sign-out-icon {
+  display: inline-grid;
+  width: 1.1rem;
+  height: 1.1rem;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .navbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .nav-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .user-identity {
+    margin-left: auto;
+    min-width: 0;
+  }
 }
 

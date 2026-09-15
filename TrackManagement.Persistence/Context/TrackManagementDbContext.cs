@@ -20,6 +20,10 @@ namespace TrackManagement.Persistence.Context
 
         public DbSet<TrackDistribution> TrackDistributions => Set<TrackDistribution>();
 
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+        public DbSet<User> Users => Set<User>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TrackManagementDbContext).Assembly);

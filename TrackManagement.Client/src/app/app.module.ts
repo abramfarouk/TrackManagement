@@ -13,6 +13,7 @@ import { TrackFormComponent } from './track-form/track-form.component';
 import { LoginComponent } from './login/login.component';
 import { ArtistListComponent } from './artist-list/artist-list.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     TrackDetailComponent,
     TrackFormComponent,
     LoginComponent,
-    ArtistListComponent
+    ArtistListComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

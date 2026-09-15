@@ -2,6 +2,7 @@
 using TrackManagement.Domain.Entities;
 using TrackManagement.Domain.Enums;
 using TrackManagement.Persistence.Context;
+using TrackManagement.Persistence.Services;
 
 namespace TrackManagement.Persistence.Seed
 {
@@ -11,6 +12,8 @@ namespace TrackManagement.Persistence.Seed
         public static async Task SeedAsync(TrackManagementDbContext db)
         {
             await db.Database.MigrateAsync();
+
+            await SeedUsersAsync(db);
 
             if (await db.Artists.AnyAsync())
             {
@@ -144,6 +147,25 @@ namespace TrackManagement.Persistence.Seed
             new() { TrackId = tracks[8].Id, DspId = apple.Id, SubmittedAt = now.AddDays(-1), Status = DistributionStatus.Pending }
         };
             await db.TrackDistributions.AddRangeAsync(distributions);
+
+            await db.SaveChangesAsync();
+        }
+
+        private static async Task SeedUsersAsync(TrackManagementDbContext db)
+        {
+            var users = new[]
+            {
+                new User { Username = "admin", PasswordHash = PasswordHasher.Hash("Password123@#"), Role = "Admin" },
+                new User { Username = "operator", PasswordHash = PasswordHasher.Hash("Password123@#"), Role = "Operator" }
+            };
+
+            foreach (var user in users)
+            {
+                if (!await db.Users.AnyAsync(item => item.Username == user.Username))
+                {
+                    db.Users.Add(user);
+                }
+            }
 
             await db.SaveChangesAsync();
         }

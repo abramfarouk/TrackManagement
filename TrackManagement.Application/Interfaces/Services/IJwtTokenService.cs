@@ -8,6 +8,6 @@ namespace TrackManagement.Application.Interfaces.Services
 {
     public interface IJwtTokenService
     {
-        (string Token, DateTime ExpiresAtUtc) GenerateToken(string username);
+        (string Token, DateTime ExpiresAtUtc) GenerateToken(string username, string role = "Admin");
     }
 }

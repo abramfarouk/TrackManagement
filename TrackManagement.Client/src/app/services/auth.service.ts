@@ -8,30 +8,36 @@ interface LoginResponse {
   expiresAtUtc: string;
 }
 
-const TOKEN_KEY = 'trackmanagement.jwt';
-const USER_KEY = 'trackmanagement.user';
-const SESSION_KEYS = [TOKEN_KEY, USER_KEY, 'trackmanagement.session', 'trackmanagement.lastLogin'];
+interface RegisteredUser {
+  username: string;
+  role: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly tokenSubject = new BehaviorSubject<string | null>(this.readStoredToken());
+  private readonly tokenSubject = new BehaviorSubject<string | null>(null);
   readonly isLoggedIn$ = this.tokenSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, { username, password })
+      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, { username, password }, { withCredentials: true })
       .pipe(tap((res) => {
-        this.setToken(res.token);
-        localStorage.setItem(USER_KEY, username.trim());
+        this.tokenSubject.next(res.token);
       }));
   }
 
+  register(username: string, password: string, role: string): Observable<RegisteredUser> {
+    return this.http
+      .post<RegisteredUser>(`${environment.apiBaseUrl}/auth/register`, { username, password, role }, { withCredentials: true });
+  }
+
   logout(): void {
-    SESSION_KEYS.forEach((key) => localStorage.removeItem(key));
-    sessionStorage.clear();
-    this.tokenSubject.next(null);
+    this.http.post(`${environment.apiBaseUrl}/auth/logout`, {}, { withCredentials: true }).subscribe({
+      complete: () => this.tokenSubject.next(null),
+      error: () => this.tokenSubject.next(null)
+    });
   }
 
   getToken(): string | null {
@@ -42,12 +48,45 @@ export class AuthService {
     return !!this.tokenSubject.value;
   }
 
-  private setToken(token: string): void {
-    localStorage.setItem(TOKEN_KEY, token);
-    this.tokenSubject.next(token);
+  isAdmin(): boolean {
+    return this.getRole() === 'Admin';
   }
 
-  private readStoredToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
+  getRole(): string | null {
+    const token = this.tokenSubject.value;
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      return payload.role ?? payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  getUsername(): string | null {
+    const token = this.tokenSubject.value;
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+      return payload.unique_name
+        ?? payload.name
+        ?? payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
+        ?? payload.sub
+        ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  refresh(): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/refresh`, {}, { withCredentials: true })
+      .pipe(tap((res) => this.tokenSubject.next(res.token)));
   }
 }

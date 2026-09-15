@@ -14,15 +14,28 @@
   <form (ngSubmit)="submit()">
     <label>
       Username
-      <input type="text" name="username" [(ngModel)]="username" required />
+      <input type="text" name="username" autocomplete="username" [(ngModel)]="username" required />
     </label>
 
     <label>
       Password
-      <input type="password" name="password" [(ngModel)]="password" required />
+      <span class="password-field">
+        <input [type]="showPassword ? 'text' : 'password'" name="password" autocomplete="current-password" [(ngModel)]="password" required />
+        <button
+          type="button"
+          class="password-toggle"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          [title]="showPassword ? 'Hide password' : 'Show password'"
+          (click)="togglePasswordVisibility()">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+            <circle cx="12" cy="12" r="2.5"></circle>
+          </svg>
+        </button>
+      </span>
     </label>
 
-      <button type="submit" [disabled]="isSubmitting">
+      <button type="submit" [disabled]="!canSubmit">
         {{ isSubmitting ? 'Signing in…' : 'Sign in to Takwene' }}
       </button>
 
