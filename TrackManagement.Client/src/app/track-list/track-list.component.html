@@ -32,6 +32,7 @@
             <th>Artist</th>
             <th>Genre</th>
             <th>Status</th>
+            <th class="actions-column">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +41,19 @@
             <td>{{ track.artistName }}</td>
             <td>{{ track.genre }}</td>
             <td><span [class]="statusClass(track.status)">{{ track.status }}</span></td>
+            <td class="actions-column">
+              <a
+                class="view-track-button"
+                [routerLink]="['/tracks', track.id]"
+                [attr.aria-label]="'View ' + track.title"
+                title="View track"
+                (click)="$event.stopPropagation()">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                  <circle cx="12" cy="12" r="2.5"></circle>
+                </svg>
+              </a>
+            </td>
           </tr>
         </tbody>
       </table>

@@ -87,6 +87,40 @@
   text-transform: uppercase;
 }
 
+.actions-column {
+  width: 5.5rem;
+  text-align: center;
+}
+
+.view-track-button {
+  display: inline-grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 1px solid rgba(88, 212, 208, 0.3);
+  border-radius: 7px;
+  background: rgba(88, 212, 208, 0.08);
+  color: var(--teal);
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.view-track-button:hover {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--navy);
+  transform: translateY(-1px);
+}
+
+.view-track-button svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
 .row-link {
   cursor: pointer;
   transition: background 150ms ease;
