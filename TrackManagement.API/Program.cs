@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Text;
+using System.Threading.RateLimiting;
 using TrackManagement.Api.Middleware;
 using TrackManagement.API.Filters;
 using TrackManagement.Infrastructure;
@@ -60,6 +61,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+#region CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
@@ -71,7 +73,25 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+#endregion
 
+# region Rate Limit
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+#endregion
+
+#region Swagger Configure
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -104,13 +124,18 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+#endregion
 
 var app = builder.Build();
+
+#region Data seeding
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TrackManagementDbContext>();
     await DbSeeder.SeedAsync(db);
 }
+
+#endregion
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -123,11 +148,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("Frontend");
 
+app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseRateLimiter();
 app.MapControllers();
-
 app.Run();

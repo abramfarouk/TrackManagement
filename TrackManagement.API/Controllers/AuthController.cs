@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TrackManagement.API.Response;
 using TrackManagement.Application.DTOs;
 using TrackManagement.Application.Interfaces.Services;
 
@@ -28,7 +29,7 @@ namespace TrackManagement.API.Controllers
 
             if (request.Username != expectedUsername || request.Password != expectedPassword)
             {
-                return Unauthorized(new { title = "Unauthorized", status = 401, detail = "Invalid username or password." });
+                return Unauthorized(ApiResponse<bool>.Fail("Username or Password Invalid", StatusCodes.Status401Unauthorized));
             }
 
             var (token, expiresAtUtc) = _jwtTokenService.GenerateToken(request.Username);
