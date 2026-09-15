@@ -36,7 +36,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.errorMessage = err?.error?.detail ?? 'Login failed. Check your credentials.';
+        this.errorMessage = err?.error?.message ?? err?.error?.detail ?? 'Login failed. Check your credentials.';
       }
     });
   }

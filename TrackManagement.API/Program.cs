@@ -37,6 +37,13 @@ var signingKey = jwtSection["SigningKey"]
 var jwtSettings2 = new JwtSettings();
 jwtSection.Bind(jwtSettings2);
 builder.Services.AddSingleton(jwtSettings2);
+var loginSecuritySettings = new LoginSecuritySettings();
+builder.Configuration.GetSection("LoginSecurity").Bind(loginSecuritySettings);
+if (loginSecuritySettings.MaxFailedAttempts <= 0 || loginSecuritySettings.LockoutMinutes <= 0)
+{
+    throw new InvalidOperationException("LoginSecurity:MaxFailedAttempts and LoginSecurity:LockoutMinutes must be positive.");
+}
+builder.Services.AddSingleton(loginSecuritySettings);
 
 
 builder.Services.AddAuthentication(options =>

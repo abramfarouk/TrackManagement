@@ -3,15 +3,13 @@ using TrackManagement.Application.DTOs;
 using TrackManagement.Application.Exceptions;
 using TrackManagement.Application.Interfaces.Services;
 using TrackManagement.Domain.Entities;
+using TrackManagement.Infrastructure.Auth;
 using TrackManagement.Persistence.Context;
 
 namespace TrackManagement.Persistence.Services;
 
 public class UserService : IUserService
 {
-    private const int MaxFailedLoginAttempts = 5;
-    private static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(15);
-
     private static readonly HashSet<string> AllowedRoles = new(StringComparer.OrdinalIgnoreCase)
     {
         "Admin",
@@ -21,10 +19,14 @@ public class UserService : IUserService
     };
 
     private readonly TrackManagementDbContext _dbContext;
+    private readonly LoginSecuritySettings _loginSecuritySettings;
 
-    public UserService(TrackManagementDbContext dbContext)
+    public UserService(
+        TrackManagementDbContext dbContext,
+        LoginSecuritySettings loginSecuritySettings)
     {
         _dbContext = dbContext;
+        _loginSecuritySettings = loginSecuritySettings;
     }
 
     public async Task<LoginAttemptResult> AuthenticateAsync(LoginRequestDto request, CancellationToken ct = default)
@@ -40,7 +42,7 @@ public class UserService : IUserService
         var now = DateTime.UtcNow;
         if (user.LockedUntilUtc.HasValue && user.LockedUntilUtc > now)
         {
-            return new LoginAttemptResult(null, true);
+            return new LoginAttemptResult(null, true, user.LockedUntilUtc);
         }
 
         if (user.LockedUntilUtc.HasValue)
@@ -52,13 +54,13 @@ public class UserService : IUserService
         if (!PasswordHasher.Verify(request.Password, user.PasswordHash))
         {
             user.FailedLoginAttempts++;
-            if (user.FailedLoginAttempts >= MaxFailedLoginAttempts)
+            if (user.FailedLoginAttempts >= _loginSecuritySettings.MaxFailedAttempts)
             {
-                user.LockedUntilUtc = now.Add(LockoutDuration);
+                user.LockedUntilUtc = now.AddMinutes(_loginSecuritySettings.LockoutMinutes);
             }
 
             await _dbContext.SaveChangesAsync(ct);
-            return new LoginAttemptResult(null, user.LockedUntilUtc.HasValue);
+            return new LoginAttemptResult(null, user.LockedUntilUtc.HasValue, user.LockedUntilUtc);
         }
 
         user.FailedLoginAttempts = 0;

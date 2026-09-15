@@ -70,12 +70,13 @@ public class RefreshTokenService : IRefreshTokenService
         var storedToken = await _dbContext.RefreshTokens
             .SingleOrDefaultAsync(item => item.TokenHash == tokenHash, cancellationToken);
 
-        if (storedToken is null || storedToken.RevokedAtUtc.HasValue)
+        if (storedToken is null)
         {
             return;
         }
 
         storedToken.RevokedAtUtc = DateTime.UtcNow;
+        storedToken.UpdatedAtUtc = storedToken.RevokedAtUtc;
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 

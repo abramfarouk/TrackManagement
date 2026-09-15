@@ -33,8 +33,11 @@ namespace TrackManagement.API.Controllers
 
             if (loginAttempt.IsLocked)
             {
+                var remainingMinutes = loginAttempt.LockedUntilUtc.HasValue
+                    ? Math.Max(1, (int)Math.Ceiling((loginAttempt.LockedUntilUtc.Value - DateTime.UtcNow).TotalMinutes))
+                    : 1;
                 return StatusCode(StatusCodes.Status429TooManyRequests,
-                    ApiResponse<bool>.Fail("Too many failed login attempts. Try again in 15 minutes.", StatusCodes.Status429TooManyRequests));
+                    ApiResponse<bool>.Fail($"Too many failed login attempts. Try again in {remainingMinutes} minutes.", StatusCodes.Status429TooManyRequests));
             }
 
             if (loginAttempt.User is null)

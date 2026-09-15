@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrackManagement.Persistence.Context;
 
@@ -11,9 +12,11 @@ using TrackManagement.Persistence.Context;
 namespace TrackManagement.Persistence.Migrations
 {
     [DbContext(typeof(TrackManagementDbContext))]
-    partial class TrackManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260915211918_Max retry login")]
+    partial class Maxretrylogin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
