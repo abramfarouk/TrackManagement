@@ -15,6 +15,7 @@ import { ArtistListComponent } from './artist-list/artist-list.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthService } from './services/auth.service';
 import { RegisterComponent } from './register/register.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export function restoreAuthSession(authService: AuthService): () => Promise<void> {
   return () => authService.restoreSession();
@@ -28,7 +29,8 @@ export function restoreAuthSession(authService: AuthService): () => Promise<void
     TrackFormComponent,
     LoginComponent,
     ArtistListComponent,
-    RegisterComponent
+    RegisterComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

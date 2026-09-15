@@ -7,6 +7,7 @@ import { TrackFormComponent } from './track-form/track-form.component';
 import { LoginComponent } from './login/login.component';
 import { ArtistListComponent } from './artist-list/artist-list.component';
 import { RegisterComponent } from './register/register.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthService } from './services/auth.service';
 
 const routes: Routes = [
@@ -21,7 +22,7 @@ const routes: Routes = [
     const router = inject(Router);
     return authService.isAdmin() ? true : router.parseUrl('/login');
   }] },
-  { path: '**', redirectTo: 'register' }
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
