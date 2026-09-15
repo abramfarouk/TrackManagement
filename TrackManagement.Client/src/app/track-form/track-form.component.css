@@ -1,0 +1,48 @@
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--teal-dark);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.eyebrow {
+  color: var(--teal-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.page-subtitle {
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+.track-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-width: 620px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 1.75rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.track-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--navy);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.track-form input,
+.track-form select {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}

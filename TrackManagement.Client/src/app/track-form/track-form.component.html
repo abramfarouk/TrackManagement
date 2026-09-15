@@ -1,0 +1,42 @@
+<div class="page">
+  <a routerLink="/tracks" class="back-link">&larr; Back to tracks</a>
+  <span class="eyebrow">CONTENT LIBRARY / NEW RELEASE</span>
+  <h1>New Track</h1>
+  <p class="page-subtitle">Add the core metadata for a release before sending it to distribution.</p>
+
+  <form (ngSubmit)="submit()" class="track-form">
+    <label>
+      Title
+      <input type="text" name="title" [(ngModel)]="model.title" minlength="2" maxlength="200" required />
+    </label>
+
+    <label>
+      Artist
+      <select name="artistId" [(ngModel)]="model.artistId" required>
+        <option [value]="0" disabled>Select an artist…</option>
+        <option *ngFor="let a of artists" [value]="a.id">{{ a.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      ISRC
+      <input type="text" name="isrc" [(ngModel)]="model.isrc" minlength="12" maxlength="12" pattern="[A-Za-z0-9]{12}" required autocomplete="off" placeholder="e.g. USX240100001" />
+    </label>
+
+    <label>
+      Genre
+      <input type="text" name="genre" [(ngModel)]="model.genre" minlength="2" maxlength="80" required />
+    </label>
+
+    <label>
+      Release date
+      <input type="date" name="releaseDate" [(ngModel)]="model.releaseDate" min="2000-01-01" required />
+    </label>
+
+    <button type="submit" class="btn" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Creating…' : 'Create Track' }}
+    </button>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </form>
+</div>

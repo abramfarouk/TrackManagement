@@ -1,0 +1,14 @@
+<nav class="navbar">
+  <a routerLink="/tracks" class="brand">
+    <span class="brand-mark" aria-hidden="true">TK</span>
+    <span><strong>Takwene</strong><small>Music operations</small></span>
+  </a>
+  <div class="nav-actions">
+    <a routerLink="/tracks" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Tracks</a>
+    <a routerLink="/artists" routerLinkActive="active-link">Artists</a>
+    <a *ngIf="!authService.isLoggedIn()" routerLink="/login" class="sign-in-link">Sign in</a>
+    <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="btn-link">Sign out</button>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

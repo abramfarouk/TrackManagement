@@ -1,0 +1,87 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">ARTIST DIRECTORY</span>
+      <h1>Artists</h1>
+      <p class="page-subtitle">Manage creative partners and catalog ownership across your releases.</p>
+    </div>
+    <button type="button" class="btn" *ngIf="authService.isLoggedIn()" (click)="openCreateDialog()">+ Add Artist</button>
+  </div>
+
+  <ng-container *ngIf="authService.isLoggedIn(); else lockedState">
+    <p *ngIf="isLoading" class="loading-state">Loading artists…</p>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <div class="table-panel" *ngIf="!isLoading && artists.length > 0">
+      <table class="artist-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Country</th>
+            <th>Tracks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let artist of artists">
+            <td>{{ artist.name }}</td>
+            <td>{{ artist.email }}</td>
+            <td>{{ artist.country }}</td>
+            <td>{{ artist.trackCount }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p *ngIf="!isLoading && artists.length === 0 && !errorMessage" class="empty-state">No artists found yet.</p>
+  </ng-container>
+
+  <ng-template #lockedState>
+    <div class="locked-panel">
+      <div class="locked-icon">🔒</div>
+      <h2>Access restricted</h2>
+      <p>You must sign in to view artists and manage the roster.</p>
+      <a routerLink="/login" class="btn">Sign in to continue</a>
+    </div>
+  </ng-template>
+</div>
+
+<div class="dialog-backdrop" *ngIf="showCreateDialog" (click)="closeCreateDialog()">
+  <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="new-artist-title" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <div>
+        <span class="eyebrow">NEW ARTIST</span>
+        <h2 id="new-artist-title">Add an artist</h2>
+      </div>
+      <button type="button" class="icon-button" (click)="closeCreateDialog()" aria-label="Close dialog">×</button>
+    </div>
+
+    <form class="artist-form" (ngSubmit)="submitArtist()" novalidate>
+      <label>
+        <span>Name</span>
+        <input type="text" name="name" [(ngModel)]="form.name" (blur)="validateArtistField('name')" (input)="revalidateArtistField('name')" minlength="2" maxlength="120" required [class.input-error]="formErrors['name']" />
+        <small class="field-error" *ngIf="formErrors['name']">{{ formErrors['name'] }}</small>
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" [(ngModel)]="form.email" (blur)="validateArtistField('email')" (input)="revalidateArtistField('email')" maxlength="254" required [class.input-error]="formErrors['email']" />
+        <small class="field-error" *ngIf="formErrors['email']">{{ formErrors['email'] }}</small>
+      </label>
+
+      <label>
+        <span>Country</span>
+        <input type="text" name="country" [(ngModel)]="form.country" (blur)="validateArtistField('country')" (input)="revalidateArtistField('country')" minlength="2" maxlength="100" required [class.input-error]="formErrors['country']" />
+        <small class="field-error" *ngIf="formErrors['country']">{{ formErrors['country'] }}</small>
+      </label>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateDialog()">Cancel</button>
+        <button type="submit" class="btn" [disabled]="isSubmitting">{{ isSubmitting ? 'Saving…' : 'Create artist' }}</button>
+      </div>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </div>
+</div>

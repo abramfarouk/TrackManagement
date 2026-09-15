@@ -1,0 +1,116 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">CONTENT LIBRARY</span>
+      <h1>Tracks</h1>
+      <p class="page-subtitle">Manage releases, metadata, and distribution from one workspace.</p>
+    </div>
+    <button type="button" class="btn" *ngIf="authService.isLoggedIn()" (click)="openCreateDialog()">+ Add Track</button>
+  </div>
+
+  <div class="status-row" *ngIf="authService.isLoggedIn(); else lockedState">
+    <div class="filters">
+      <label class="filter-field">
+        <span>Status</span>
+        <select name="statusFilter" [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+          <option value="">All</option>
+          <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+        </select>
+      </label>
+      <span class="track-count">{{ tracks.length }} {{ tracks.length === 1 ? 'track' : 'tracks' }}</span>
+    </div>
+
+    <p *ngIf="isLoading" class="loading-state">Loading library…</p>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+
+    <div class="table-panel" *ngIf="!isLoading && tracks.length > 0">
+      <table class="track-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Genre</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let track of tracks" [routerLink]="['/tracks', track.id]" class="row-link">
+            <td>{{ track.title }}</td>
+            <td>{{ track.artistName }}</td>
+            <td>{{ track.genre }}</td>
+            <td><span [class]="statusClass(track.status)">{{ track.status }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p *ngIf="!isLoading && tracks.length === 0 && !errorMessage" class="empty-state">No tracks match this filter.</p>
+  </div>
+
+  <ng-template #lockedState>
+    <div class="locked-panel">
+      <div class="locked-icon">🔒</div>
+      <h2>Access restricted</h2>
+      <p>You cannot access the music library until you sign in.</p>
+      <a routerLink="/login" class="btn">Sign in to continue</a>
+    </div>
+  </ng-template>
+
+</div>
+
+<div class="dialog-backdrop" *ngIf="showCreateDialog" (click)="closeCreateDialog()">
+  <div class="dialog-panel" role="dialog" aria-modal="true" aria-labelledby="new-track-title" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <div>
+        <span class="eyebrow">NEW RELEASE</span>
+        <h2 id="new-track-title">Add a track</h2>
+      </div>
+      <button type="button" class="icon-button" (click)="closeCreateDialog()" aria-label="Close dialog">×</button>
+    </div>
+
+    <form class="track-form" (ngSubmit)="submitTrack()" novalidate>
+      <div class="form-grid">
+        <label>
+          <span>Title</span>
+          <input type="text" name="title" [(ngModel)]="form.title" (blur)="validateTrackField('title')" (input)="revalidateTrackField('title')" minlength="2" maxlength="200" required [attr.aria-invalid]="formErrors['title'] ? 'true' : null" [class.input-error]="formErrors['title']" />
+          <small class="field-error" *ngIf="formErrors['title']">{{ formErrors['title'] }}</small>
+        </label>
+
+        <label>
+          <span>Artist</span>
+          <select name="artistId" [(ngModel)]="form.artistId" (blur)="validateTrackField('artistId')" (change)="validateTrackField('artistId')" required [attr.aria-invalid]="formErrors['artistId'] ? 'true' : null" [class.input-error]="formErrors['artistId']">
+            <option [ngValue]="0">Select an artist</option>
+            <option *ngFor="let artist of artists" [ngValue]="artist.id">{{ artist.name }}</option>
+          </select>
+          <small class="field-error" *ngIf="formErrors['artistId']">{{ formErrors['artistId'] }}</small>
+        </label>
+
+        <label>
+          <span>ISRC</span>
+          <input type="text" name="isrc" [(ngModel)]="form.isrc" (blur)="validateTrackField('isrc')" (input)="revalidateTrackField('isrc')" minlength="12" maxlength="12" pattern="[A-Za-z0-9]{12}" required autocomplete="off" [attr.aria-invalid]="formErrors['isrc'] ? 'true' : null" [class.input-error]="formErrors['isrc']" placeholder="USX240100001" />
+          <small class="field-error" *ngIf="formErrors['isrc']">{{ formErrors['isrc'] }}</small>
+        </label>
+
+        <label>
+          <span>Genre</span>
+          <input type="text" name="genre" [(ngModel)]="form.genre" (blur)="validateTrackField('genre')" (input)="revalidateTrackField('genre')" minlength="2" maxlength="80" required [attr.aria-invalid]="formErrors['genre'] ? 'true' : null" [class.input-error]="formErrors['genre']" placeholder="Synthwave" />
+          <small class="field-error" *ngIf="formErrors['genre']">{{ formErrors['genre'] }}</small>
+        </label>
+
+        <label class="full-width">
+          <span>Release date</span>
+          <input type="date" name="releaseDate" [(ngModel)]="form.releaseDate" (blur)="validateTrackField('releaseDate')" (change)="validateTrackField('releaseDate')" min="2000-01-01" required [attr.aria-invalid]="formErrors['releaseDate'] ? 'true' : null" [class.input-error]="formErrors['releaseDate']" />
+          <small class="field-error" *ngIf="formErrors['releaseDate']">{{ formErrors['releaseDate'] }}</small>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateDialog()">Cancel</button>
+        <button type="submit" class="btn" [disabled]="isSubmitting">{{ isSubmitting ? 'Creating…' : 'Create track' }}</button>
+      </div>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </div>
+</div>

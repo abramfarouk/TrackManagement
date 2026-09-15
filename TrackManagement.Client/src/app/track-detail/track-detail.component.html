@@ -1,0 +1,71 @@
+<div class="page">
+  <a routerLink="/tracks" class="back-link">&larr; Back to tracks</a>
+
+  <p *ngIf="isLoading">Loading…</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <ng-container *ngIf="track as t">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">TRACK DETAILS</span>
+        <h1>{{ t.title }}</h1>
+        <p class="page-subtitle">{{ t.artistName }} · {{ t.genre }}</p>
+      </div>
+      <span [class]="statusClass(t.status)">{{ t.status }}</span>
+    </div>
+
+    <dl class="meta detail-card">
+      <dt>Artist</dt><dd>{{ t.artistName }}</dd>
+      <dt>Genre</dt><dd>{{ t.genre }}</dd>
+      <dt>ISRC</dt><dd>{{ t.isrc }}</dd>
+      <dt>Release date</dt><dd>{{ t.releaseDate | date: 'mediumDate' }}</dd>
+    </dl>
+
+    <h2>DSP Distribution</h2>
+    <table *ngIf="t.distributions.length > 0">
+      <thead>
+        <tr><th>DSP</th><th>Submitted</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of t.distributions">
+          <td>{{ d.dspName }}</td>
+          <td>{{ d.submittedAt | date: 'medium' }}</td>
+          <td><span [class]="statusClass(d.status)">{{ d.status }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="t.distributions.length === 0">Not yet submitted to any DSP.</p>
+
+    <ng-container *ngIf="authService.isLoggedIn(); else loginPrompt">
+      <section class="action-card">
+        <h3>Submit to DSPs</h3>
+        <div class="dsp-checkboxes">
+          <label *ngFor="let dsp of allDsps">
+            <input
+              type="checkbox"
+              [checked]="selectedDspIds.has(dsp.id)"
+              (change)="toggleDsp(dsp.id)"
+            />
+            {{ dsp.name }}
+            <span class="already" *ngIf="isDistributedTo(dsp.id)">(already submitted)</span>
+          </label>
+        </div>
+        <button class="btn" (click)="submitDistribution()">Submit selected</button>
+      </section>
+
+      <section class="action-card">
+        <h3>Update track status</h3>
+        <select [(ngModel)]="newStatus">
+          <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+        </select>
+        <button class="btn btn-secondary" (click)="submitStatusChange()">Update status</button>
+      </section>
+
+      <p *ngIf="actionMessage" class="success">{{ actionMessage }}</p>
+    </ng-container>
+
+    <ng-template #loginPrompt>
+      <p class="hint"><a routerLink="/login">Sign in</a> to submit this track to DSPs or change its status.</p>
+    </ng-template>
+  </ng-container>
+</div>

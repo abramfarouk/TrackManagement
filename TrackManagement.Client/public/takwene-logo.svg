@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Takwene</title>
+  <rect width="64" height="64" rx="16" fill="#ff7d5b"/>
+  <path d="M16 20h32M24 20v24M40 20v24" fill="none" stroke="#07111d" stroke-linecap="round" stroke-width="6"/>
+  <path d="M18 44h28" fill="none" stroke="#07111d" stroke-linecap="round" stroke-width="6"/>
+</svg>

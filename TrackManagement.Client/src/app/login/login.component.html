@@ -1,0 +1,32 @@
+<main class="login-shell">
+  <section class="login-intro">
+    <span class="eyebrow">TAKWENE / CONTENT OPERATIONS</span>
+    <h1>Move your music<br /><em>forward.</em></h1>
+    <p>Manage releases, keep metadata accurate, and deliver every track to the platforms that matter.</p>
+  </section>
+
+  <section class="login-card">
+    <div class="card-heading">
+      <span class="mini-mark">T</span>
+      <div><h2>Welcome back</h2><p>Sign in to your workspace</p></div>
+    </div>
+
+  <form (ngSubmit)="submit()">
+    <label>
+      Username
+      <input type="text" name="username" [(ngModel)]="username" required />
+    </label>
+
+    <label>
+      Password
+      <input type="password" name="password" [(ngModel)]="password" required />
+    </label>
+
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in…' : 'Sign in to Takwene' }}
+      </button>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </section>
+</main>
