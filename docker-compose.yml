@@ -60,15 +60,14 @@ services:
 
       Jwt__ExpiryMinutes: "60"
 
+      LoginSecurity__MaxFailedAttempts: "5"
+
+      LoginSecurity__LockoutMinutes: "10"
+
 
 
       Cors__AllowedOrigins__0: "http://localhost:4200"
 
-
-
-      DemoUser__Username: "admin"
-
-      DemoUser__Password: "Password123@#"
 
 
     ports:

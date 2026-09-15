@@ -82,14 +82,34 @@ docker compose down
 
 Add `-v` to the command when the SQL Server volume should also be removed.
 
-## Obtain a JWT
+## Authentication
 
-The Development configuration provides this demo user:
+The database seeder creates these accounts when they do not already exist:
 
 ```text
+Admin account:
 Username: admin
 Password: Password123@#
+Role: Admin
+
+Operator account:
+Username: operator
+Password: Password123@#
+Role: Operator
 ```
+
+Only users with the `Admin` role can open the **Add user** page and create accounts. Available roles are `Admin`, `Operator`, `Editor`, and `Viewer`.
+
+Login security is configured in `TrackManagement.API/appsettings.json`:
+
+```json
+"LoginSecurity": {
+	"MaxFailedAttempts": 5,
+	"LockoutMinutes": 10
+}
+```
+
+After five invalid password attempts, the account is locked for the configured duration. Refresh tokens reuse one database row per username. Logout sets `RevokedAtUtc` on that row instead of inserting another row.
 
 Request a token from the API:
 
