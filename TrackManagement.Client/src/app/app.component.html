@@ -17,7 +17,6 @@
     </span>
     <a *ngIf="!authService.isLoggedIn()" routerLink="/login" class="sign-in-link">Sign in</a>
     <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="btn-link" title="Sign out">
-      <span class="sign-out-icon" aria-hidden="true">&#8594;</span>
       <span>Sign out</span>
     </button>
   </div>

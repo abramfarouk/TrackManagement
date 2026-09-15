@@ -88,26 +88,39 @@
 }
 
 .add-user-link {
-  padding: 0.55rem 0.8rem;
-  border: 1px solid rgba(255, 125, 91, 0.45);
+  padding: 0.52rem 0.85rem;
+  border: 1px solid rgba(88, 212, 208, 0.55);
   border-radius: 7px;
-  background: rgba(255, 125, 91, 0.1);
-  color: #ffd5c8 !important;
+  background: rgba(88, 212, 208, 0.12);
+  color: #b9f3ed !important;
+  opacity: 1 !important;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.add-user-link:hover,
+.add-user-link.active-link {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--navy) !important;
 }
 
 .btn-link {
-  background: none;
-  border: none;
-  color: #ffffff;
+  padding: 0.52rem 0.8rem;
+  border: 1px solid rgba(237, 244, 255, 0.24);
+  border-radius: 7px;
+  background: rgba(237, 244, 255, 0.05);
+  color: #c5d0df;
   cursor: pointer;
   font: inherit;
   font-size: 0.9rem;
-  padding: 0;
-  opacity: 0.82;
+  opacity: 1;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .btn-link:hover {
-  color: #ffffff;
+  border-color: rgba(255, 143, 122, 0.65);
+  background: rgba(255, 143, 122, 0.1);
+  color: #ffb09e;
   opacity: 1;
 }
 
@@ -191,16 +204,6 @@
 
 .user-identity small:not(.user-caption):not(.user-role) {
   color: var(--ink);
-}
-
-.sign-out-icon {
-  display: inline-grid;
-  width: 1.1rem;
-  height: 1.1rem;
-  place-items: center;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-  font-size: 0.75rem;
 }
 
 @media (max-width: 760px) {
